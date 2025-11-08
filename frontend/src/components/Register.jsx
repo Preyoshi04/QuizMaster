@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import BASE_URL from "../config";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -14,7 +15,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("/api/users/register", {
+      const { data } = await axios.post(`${BASE_URL}/api/users/register`, {
         username,
         email,
         password,

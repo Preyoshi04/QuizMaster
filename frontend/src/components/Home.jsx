@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { Play } from "lucide-react";
+import BASE_URL from "../config.js";
 
 const Home = () => {
   const [category, setCategory] = useState(""); // must be scalar (string)
@@ -50,7 +51,7 @@ const Home = () => {
     }
     try {
       // Call your own backend API instead of OpenTDB directly
-      const { data } = await axios.get("http://localhost:5100/api/questions", {
+      const { data } = await axios.get(`${BASE_URL}/api/questions`, {
         params: {
           amount,
           category,

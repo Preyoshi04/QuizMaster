@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BookOpen, BarChart3, Home } from "lucide-react";
+import BASE_URL from "../config.js";
 
 const Quiz = () => {
   const { state } = useLocation();
@@ -32,9 +33,9 @@ const Quiz = () => {
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5100/api/questions?amount=${amount}&category=${category}&difficulty=${difficulty}&type=multiple`
-        );
+        const res = await axios.get(`${BASE_URL}/api/questions`, {
+          params: { amount, category, difficulty, type: "multiple" },
+        });
         setQuestions(res.data.questions);
       } catch (error) {
         console.error("Error fetching quiz:", error);
@@ -45,8 +46,6 @@ const Quiz = () => {
     fetchQuiz();
   }, [amount, category, difficulty]);
 
-
-  
   const handleAnswerClick = (answer) => {
     if (showAnswer) return;
     setSelectedAnswer(answer);
@@ -60,7 +59,11 @@ const Quiz = () => {
       .trim()
       .toLowerCase();
 
-    const selected = answer.replace(/&quot;/g, '"').replace(/&#039;/g, "'").trim().toLowerCase();
+    const selected = answer
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'")
+      .trim()
+      .toLowerCase();
 
     if (selected === correctAnswer) {
       setScore((prev) => prev + 1);
@@ -83,24 +86,28 @@ const Quiz = () => {
       });
     }
   };
-  if (loading) return <p className="text-center mt-10 text-blue-600">Loading questions...</p>;
-  if (!questions.length) return <p className="text-center mt-10 text-red-500">No questions available!</p>;
-
-
+  if (loading)
+    return (
+      <p className="text-center mt-10 text-blue-600">Loading questions...</p>
+    );
+  if (!questions.length)
+    return (
+      <p className="text-center mt-10 text-red-500">No questions available!</p>
+    );
 
   return (
     <div className="min-h-screen bg-blue-50 py-10 px-4">
       {/* ✅ Header Info */}
       <div className="max-w-4xl mx-auto flex justify-between items-center mb-6 bg-blue-100 p-4 rounded-2xl shadow">
         <div className="flex items-center text-blue-700 font-semibold text-lg">
-          <BookOpen size={22}/>
+          <BookOpen size={22} />
           Category:{category}
         </div>
         <h2 className="text-lg font-semibold text-blue-800">
           Q:{currentQues + 1} of {questions.length}
         </h2>
         <div className="flex items-center text-blue-700 font-semibold text-lg">
-          <BarChart3  />
+          <BarChart3 />
           Difficulty:{difficulty}
         </div>
       </div>
@@ -154,14 +161,14 @@ const Quiz = () => {
         </div>
       </div>
       <div className="mt-10">
-         <button
-            onClick={() => navigate("/")}
-            className="flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200"
-          >
-            <Home className="w-5 h-5" />
-            Home
-          </button>
-       </div>
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200"
+        >
+          <Home className="w-5 h-5" />
+          Home
+        </button>
+      </div>
     </div>
   );
 };
